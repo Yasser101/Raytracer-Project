@@ -90,6 +90,52 @@ void savebmp(const char *filename, int w, int h, int dpi, RGBType *data){
     fclose(f);
 }
 
+int winningObjectIndex(vector<double> object_intersections) {
+    // return the index of the winning intersection
+    int index_of_minimum_value;
+
+    // prevent unnessary calculations
+    if(object_intersections.size() == 0){
+        // if there is no intersections
+        return -1;
+    }else if(object_intersections.size() == 1){
+        if(object_intersections.at(0) > 0){
+            //if that intersection is greater than zero then its our index of minimum
+            return 0;
+        }else{
+            // otherwise the only intersection value is negative
+            return -1;
+        }
+    }else{
+        // if there are more than one intersection in the array we need to get the least value or the closest to the camera
+        // first find the maximum value
+
+        double max = 0;
+        for(int i=0;i<object_intersections.size();i++){
+            if(max < object_intersections.at(i)){
+                max = object_intersections.at(i);
+            }
+        }
+
+        // then starting from the maximum value find the minimum positive
+        if (max > 0){
+            // we only want positive intersections
+            for(int index=0;index<object_intersections.size();index++){
+                if(object_intersections.at(index) > 0 && object_intersections.at(index) <= max){
+                    max = object_intersections.at(index);
+                    index_of_minimum_value = index;
+                }
+            }
+
+            return index_of_minimum_value;
+        }else{
+            // all intersections were negative
+            return -1;
+        }
+    }
+
+}
+
 int thisone;
 
 int main(){
@@ -99,6 +145,8 @@ int main(){
     int height = 480;
     int n = width*height;
     RGBType *pixels = new RGBType[n];
+
+    double aspectratio = (double)width/(double)height;
 
     Vect O (0,0,0);
 
@@ -124,15 +172,53 @@ int main(){
 
     Vect light_position (-7,10,-10);
     Light scene_light (light_position, white_light);
-    Plane scene_plane (Y, -1, maroon);
 
     // scene objects
     Sphere scene_sphere (O, 1, pretty_green);
+    Plane scene_plane (Y, -1, maroon);
+
+    vector<Object*> scene_objects;
+    scene_objects.push_back(dynamic_cast<Object*>(&scene_sphere));
+    scene_objects.push_back(dynamic_cast<Object*>(&scene_plane));
+
+    double xamnt, yamnt;
 
     for(int x=0;x<width;x++){
         for(int y=0;y<height;y++){
             thisone = y*width + x; //xy cordinates of an indvidual pixel
             
+            // start with no anti-aliasing
+            if(width > height){
+                // the image is wider than it is tall
+                xamnt = ((x+0.5)/width)*aspectratio - (((width-height)/(double)height)/2);
+                yamnt = ((height - y) +  0.5)/height;
+            }else if (height > width){
+                // the image is taller than it is wide
+                xamnt = (x + 0.5)/ width;
+                yamnt = (((height - y) + 0.5)/height)/aspectratio - (((height - width)/(double)width)/2);
+            }else{
+                // the image is square
+                xamnt = (x + 0.5)/width;
+                yamnt = ((height - y) + 0.5)/height;
+            }
+            //offset a position from our direction that camera is pointed in order to create rays that goes to left were the camera is pointed and rays that go to the right were the direction that the camera is pointed and above and below
+            //now we can start creating rays
+
+            Vect cam_ray_origin = scene_cam.getCameraPosition();
+            Vect cam_ray_direction = camdir.vectAdd(camright.vectMult(xamnt - 0.5).vectAdd(camdown.vectMult(yamnt - 0.5))).normalize();
+
+            Ray cam_ray (cam_ray_origin, cam_ray_direction);
+
+            vector<double> intersection;
+            // we are gonna loop through each object in our scene to determin if the ray that we just created intersects with any of those objects
+            for (int index=0;index<scene_objects.size();index++){
+                intersection.push_back(scene_objects.at(index)->findIntersection(cam_ray));
+                //this loops through each object in our scene asks to find each intersection with the cam ray and pushes that value into this intersections vector
+            }
+            //which object is closer to the camera// "winningObjectIndex" sorts the array of intersection and returns the index of the winning object
+            int index_of_winning_object = winningObjectIndex(intersection);
+
+
             if((x>200 && x < 440) && (y>200 && y < 280)){
                 pixels[thisone].r = 23;
                 pixels[thisone].g = 222;
