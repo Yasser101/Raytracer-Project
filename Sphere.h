@@ -20,7 +20,7 @@ class Sphere : public Object {
     // some method functions
     Vect getSphereCenter () { return center; }
     double getSphereRadius () { return radius; }
-    Color getSphereColor () { return color; }
+    virtual Color getColor () { return color; }
 
     //find the intersections with the sphere
     Vect getNormalAt(Vect point) {
@@ -29,7 +29,7 @@ class Sphere : public Object {
         return normal_Vect;
     }
     
-    double findIntersection(Ray ray) {
+    virtual double findIntersection(Ray ray) {
         Vect ray_origin = ray.getRayOrigin();
         double ray_origin_x = ray_origin.getVectX();
         double ray_origin_y = ray_origin.getVectY();

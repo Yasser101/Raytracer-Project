@@ -219,19 +219,25 @@ int main(){
             int index_of_winning_object = winningObjectIndex(intersection);
 
 
-            if((x>200 && x < 440) && (y>200 && y < 280)){
-                pixels[thisone].r = 23;
-                pixels[thisone].g = 222;
-                pixels[thisone].b = 10;
-            }else {
+
+            if(index_of_winning_object == -1){
+                // set the background black
                 pixels[thisone].r = 0;
                 pixels[thisone].g = 0;
                 pixels[thisone].b = 0;
+            }else {
+                // index coresponds to an object in our scene
+
+                Color this_color = scene_objects.at(index_of_winning_object)->getColor();
+
+                pixels[thisone].r = this_color.getColorRed();
+                pixels[thisone].g = this_color.getColorGreen();
+                pixels[thisone].b = this_color.getColorBlue();
             }
         }
     }
 
     savebmp("scene.bmp",width,height,dpi,pixels);
-    cout<<"Compiled!!!!5"<<endl;
+    cout<<"Compiled!!!!"<<endl;
     return 0;
 }

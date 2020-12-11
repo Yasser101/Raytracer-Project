@@ -20,13 +20,13 @@ class Plane : public Object {
     // some method functions
     Vect getPlaneNormal () { return normal; }
     double getPlaneDistance () { return distance; }
-    Color getPlaneColor () { return color; }
+    virtual Color getColor () { return color; }
 
     Vect getNormalAt(Vect point) {
         return normal;
     }
 
-    double findIntersection(Ray ray) {
+    virtual double findIntersection(Ray ray) {
         Vect ray_direction = ray.getRayDirection();
         
         double a = ray_direction.dotProduct(normal);
@@ -37,7 +37,7 @@ class Plane : public Object {
         }else{
             //IMP!!!!!
             double b = normal.dotProduct(ray.getRayOrigin().vectAdd(normal.vectMult(distance).negative()));
-            return -1*b/a; //distance from ray origin to the point of intersection
+			return -1*b/a; //distance from ray origin to the point of intersection
         }
     }
 };

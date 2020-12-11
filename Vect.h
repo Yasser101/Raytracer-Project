@@ -35,7 +35,7 @@ class Vect {
     }
 
     Vect crossProduct(Vect v) {
-        return Vect (y*v.getVectZ() - z*v.getVectY(), z*getVectX() - x*v.getVectZ(), x*v.getVectY() - y*v.getVectX());
+        return Vect (y*v.getVectZ() - z*v.getVectY(), z*v.getVectX() - x*v.getVectZ(), x*v.getVectY() - y*v.getVectX());
     }
 
     Vect vectAdd (Vect v) {
