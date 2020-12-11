@@ -14,6 +14,9 @@
 #include "Camera.h"
 #include "Color.h"
 #include "Light.h"
+#include "Object.h"
+#include "Sphere.h"
+#include "Plane.h"
 
 using namespace std;
 
@@ -97,6 +100,8 @@ int main(){
     int n = width*height;
     RGBType *pixels = new RGBType[n];
 
+    Vect O (0,0,0);
+
     Vect X (1,0,0);
     Vect Y (0,1,0);
     Vect Z (0,0,1);
@@ -113,11 +118,16 @@ int main(){
 
     Color white_light (1.0, 1.0, 1.0, 0);
     Color pretty_green (0.5, 1.0, 0.5, 0.3);
+    Color maroon (0.5, 0.25, 0.25, 0);
     Color gray (0.5, 0.5, 0.5, 0);
     Color black (0.0, 0.0, 0.0, 0);
 
     Vect light_position (-7,10,-10);
     Light scene_light (light_position, white_light);
+    Plane scene_plane (Y, -1, maroon);
+
+    // scene objects
+    Sphere scene_sphere (O, 1, pretty_green);
 
     for(int x=0;x<width;x++){
         for(int y=0;y<height;y++){
@@ -136,6 +146,6 @@ int main(){
     }
 
     savebmp("scene.bmp",width,height,dpi,pixels);
-    cout<<"Compiled!!!!"<<endl;
+    cout<<"Compiled!!!!5"<<endl;
     return 0;
 }
