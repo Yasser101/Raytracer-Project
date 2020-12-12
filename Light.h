@@ -16,7 +16,7 @@ class Light : public Source {
     Light(Vect, Color);
 
     // some method functions
-    virtual Vect getLightPostion () { return position; }
+    virtual Vect getLightPosition () { return position; }
     virtual Color getLightColor () { return color; }
 };
 
