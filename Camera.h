@@ -1,5 +1,5 @@
-#ifndef _CAMERA_H
-#define _CAMERA_H
+#ifndef _Camera_H
+#define _Camera_H
 
 #include "Vect.h"
 

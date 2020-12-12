@@ -23,7 +23,7 @@ class Sphere : public Object {
     virtual Color getColor () { return color; }
 
     //find the intersections with the sphere
-    Vect getNormalAt(Vect point) {
+    virtual Vect getNormalAt(Vect point) {
         // normal always points away from the center of a sphere
         Vect normal_Vect = point.vectAdd(center.negative()).normalize();
         return normal_Vect;

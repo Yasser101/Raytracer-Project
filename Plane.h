@@ -1,5 +1,5 @@
-#ifndef _PLANE_H
-#define _PLANE_H
+#ifndef _Plane_H
+#define _Plane_H
 
 #include "math.h"
 #include "Object.h"
@@ -22,7 +22,7 @@ class Plane : public Object {
     double getPlaneDistance () { return distance; }
     virtual Color getColor () { return color; }
 
-    Vect getNormalAt(Vect point) {
+    virtual Vect getNormalAt(Vect point) {
         return normal;
     }
 
